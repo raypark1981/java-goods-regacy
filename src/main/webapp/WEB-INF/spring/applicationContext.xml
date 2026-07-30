@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="
+           http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans.xsd
+           http://www.springframework.org/schema/context
+           http://www.springframework.org/schema/context/spring-context.xsd
+           http://www.springframework.org/schema/tx
+           http://www.springframework.org/schema/tx/spring-tx.xsd">
+
+    <!-- ============================================ -->
+    <!-- 1. Service, DAO 자동 스캔                   -->
+    <!--    Controller는 dispatcher-servlet.xml에서  -->
+    <!--    스캔하므로 여기서는 제외                 -->
+    <!-- ============================================ -->
+    <context:component-scan base-package="com.hyundaicard.mmall">
+        <context:exclude-filter type="annotation"
+            expression="org.springframework.stereotype.Controller"/>
+    </context:component-scan>
+
+    <!-- ============================================ -->
+    <!-- 2. DataSource (DB 연결 정보)                -->
+    <!--    실제 운영에서는 JNDI나 외부 프로퍼티로  -->
+    <!--    분리하는 게 일반적                       -->
+    <!-- ============================================ -->
+    <bean id="dataSource" class="org.apache.commons.dbcp2.BasicDataSource"
+          destroy-method="close">
+        <property name="driverClassName" value="oracle.jdbc.OracleDriver"/>
+        <property name="url" value="jdbc:oracle:thin:@localhost:1521:orcl"/>
+        <property name="username" value="mmall"/>
+        <property name="password" value="mmall123"/>
+        <property name="initialSize" value="5"/>
+        <property name="maxTotal" value="20"/>
+        <property name="maxIdle" value="10"/>
+    </bean>
+
+    <!-- ============================================ -->
+    <!-- 3. MyBatis SqlSessionFactory               -->
+    <!--    MyBatis가 DB와 통신하는 핵심 객체        -->
+    <!-- ============================================ -->
+    <bean id="sqlSessionFactory"
+          class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="dataSource"/>
+        <!-- SQL XML 파일 위치 -->
+        <property name="mapperLocations" value="classpath:mapper/**/*.xml"/>
+        <!-- MyBatis 전역 설정 -->
+        <property name="configuration">
+            <bean class="org.apache.ibatis.session.Configuration">
+                <!-- snake_case DB 컬럼 → camelCase Java 필드 자동 매핑 -->
+                <property name="mapUnderscoreToCamelCase" value="true"/>
+            </bean>
+        </property>
+    </bean>
+
+    <!-- ============================================ -->
+    <!-- 4. MyBatis Mapper 자동 스캔                 -->
+    <!--    @Mapper 어노테이션 붙은 인터페이스를      -->
+    <!--    자동으로 Bean으로 등록                   -->
+    <!-- ============================================ -->
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="basePackage" value="com.hyundaicard.mmall.dao"/>
+        <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"/>
+    </bean>
+
+    <!-- ============================================ -->
+    <!-- 5. 트랜잭션 관리자                          -->
+    <!--    @Transactional 어노테이션이 동작하게 함  -->
+    <!-- ============================================ -->
+    <bean id="transactionManager"
+          class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+
+    <tx:annotation-driven transaction-manager="transactionManager"/>
+
+</beans>
