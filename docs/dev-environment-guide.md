@@ -21,13 +21,14 @@
 # 프로젝트 루트로 이동
 cd D:/goods-legacy
 
-# 내장 Tomcat 시작 (포트 8080)
-mvn tomcat:run
+# 내장 Tomcat 9 시작 (포트 8080)
+mvn cargo:run
 ```
 
-> **왜 `tomcat7:run`이 아닌 `tomcat:run`인가?**
-> `tomcat7-maven-plugin`은 2013년 출시된 플러그인으로 Java 9 이상과 호환되지 않는다.
-> `tomcat-maven-plugin`(prefix: `tomcat`)이 Java 11 환경에서 정상 동작하므로 이를 사용한다.
+> **왜 `cargo:run`인가?**
+> - `tomcat7-maven-plugin` → Java 11 비호환 (2013년 출시, 모듈 시스템 미지원)
+> - `tomcat-maven-plugin` → Tomcat 6 (Servlet 2.5), Spring MVC 5.3 비호환
+> - `cargo-maven3-plugin` + Tomcat 9 → Java 11 + Servlet 4.0 + Spring MVC 5.3 모두 정상 동작
 
 실행 후 브라우저 접속:
 ```
@@ -41,9 +42,9 @@ http://localhost:8080/mmall/goods/goodsDetail.do?gdCd=2735991
 3. 아래와 같이 설정:
 
 ```
-Name        : tomcat:run
+Name        : cargo:run
 Working dir : $PROJECT_DIR$
-Goals       : tomcat:run
+Goals       : cargo:run
 ```
 
 4. `Apply → OK` 후 ▶ 버튼으로 실행

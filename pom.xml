@@ -131,17 +131,24 @@
                 <artifactId>maven-war-plugin</artifactId>
                 <version>3.4.0</version>
             </plugin>
-            <!-- Tomcat 내장 실행 : mvn tomcat:run                      -->
-            <!-- tomcat7-maven-plugin은 Java 11+과 호환 안 됨 (2013년 출시) -->
-            <!-- tomcat-maven-plugin(Tomcat 6 기반)을 로컬 개발용으로 사용  -->
+            <!-- 내장 Tomcat 실행 : mvn cargo:run                    -->
+            <!-- cargo-maven3-plugin + Tomcat 9 (Servlet 4.0)    -->
+            <!-- Java 11 + Spring MVC 5.3 조합에서 정상 동작      -->
             <plugin>
-                <groupId>org.apache.tomcat.maven</groupId>
-                <artifactId>tomcat-maven-plugin</artifactId>
-                <version>1.1</version>
+                <groupId>org.codehaus.cargo</groupId>
+                <artifactId>cargo-maven3-plugin</artifactId>
+                <version>1.10.13</version>
                 <configuration>
-                    <port>8080</port>
-                    <path>/mmall</path>
-                    <uriEncoding>UTF-8</uriEncoding>
+                    <container>
+                        <containerId>tomcat9x</containerId>
+                        <type>embedded</type>
+                    </container>
+                    <configuration>
+                        <properties>
+                            <cargo.servlet.port>8080</cargo.servlet.port>
+                            <cargo.context>mmall</cargo.context>
+                        </properties>
+                    </configuration>
                 </configuration>
             </plugin>
         </plugins>

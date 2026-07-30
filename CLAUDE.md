@@ -10,7 +10,7 @@ Spring MVC + MyBatis + Oracle 구성. `.do` URL 패턴 사용.
 - MyBatis 3.5.x + XML Mapper
 - Oracle DB (DBCP2 커넥션 풀)
 - JSP + JSTL (뷰 레이어)
-- 내장 Tomcat: `mvn tomcat:run` (`tomcat7:run` 아님 — Java 11 비호환)
+- 내장 Tomcat: `mvn cargo:run` (cargo-maven3-plugin + Tomcat 9 embedded)
 
 ## 디렉토리 구조
 ```
@@ -38,7 +38,7 @@ src/main/
 
 ## 실행
 ```bash
-mvn tomcat:run        # 로컬 실행 → http://localhost:8080/mmall
+mvn cargo:run         # 로컬 실행 → http://localhost:8080/mmall
 mvn clean package     # WAR 빌드
 ```
 
