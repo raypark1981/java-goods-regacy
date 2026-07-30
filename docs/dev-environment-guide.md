@@ -22,8 +22,12 @@
 cd D:/goods-legacy
 
 # 내장 Tomcat 시작 (포트 8080)
-mvn tomcat7:run
+mvn tomcat:run
 ```
+
+> **왜 `tomcat7:run`이 아닌 `tomcat:run`인가?**
+> `tomcat7-maven-plugin`은 2013년 출시된 플러그인으로 Java 9 이상과 호환되지 않는다.
+> `tomcat-maven-plugin`(prefix: `tomcat`)이 Java 11 환경에서 정상 동작하므로 이를 사용한다.
 
 실행 후 브라우저 접속:
 ```
@@ -37,9 +41,9 @@ http://localhost:8080/mmall/goods/goodsDetail.do?gdCd=2735991
 3. 아래와 같이 설정:
 
 ```
-Name        : tomcat7:run
+Name        : tomcat:run
 Working dir : $PROJECT_DIR$
-Goals       : tomcat7:run
+Goals       : tomcat:run
 ```
 
 4. `Apply → OK` 후 ▶ 버튼으로 실행

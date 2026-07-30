@@ -131,11 +131,13 @@
                 <artifactId>maven-war-plugin</artifactId>
                 <version>3.4.0</version>
             </plugin>
-            <!-- Tomcat 내장 실행 : mvn tomcat7:run -->
+            <!-- Tomcat 내장 실행 : mvn tomcat:run                      -->
+            <!-- tomcat7-maven-plugin은 Java 11+과 호환 안 됨 (2013년 출시) -->
+            <!-- tomcat-maven-plugin(Tomcat 6 기반)을 로컬 개발용으로 사용  -->
             <plugin>
                 <groupId>org.apache.tomcat.maven</groupId>
-                <artifactId>tomcat7-maven-plugin</artifactId>
-                <version>2.2</version>
+                <artifactId>tomcat-maven-plugin</artifactId>
+                <version>1.1</version>
                 <configuration>
                     <port>8080</port>
                     <path>/mmall</path>
