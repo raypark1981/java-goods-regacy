@@ -8,12 +8,63 @@
 | Maven | 3.6+ | `mvn -version` |
 | IntelliJ IDEA | 최신 | — |
 | Git | 최신 | `git --version` |
-
-> Tomcat은 별도 설치 불필요 — Maven 플러그인으로 내장 실행
+| Tomcat | 9 | 아래 설치 방법 참고 |
 
 ---
 
-## 1. 로컬 실행 (Maven 내장 Tomcat)
+## 1. IntelliJ + Tomcat 직접 연결 (실무 방식 — 권장)
+
+중단점(breakpoint) 디버깅이 가능해서 실무에서 가장 많이 쓰는 방식.
+
+### 1-1. Tomcat 9 설치
+
+1. `https://tomcat.apache.org/download-90.cgi` 접속
+2. **Binary Distributions → Core → zip** 다운로드
+3. 압축 풀어서 고정 경로에 배치
+
+```
+C:\tomcat9\          ← 이 경로를 IntelliJ에 등록
+    ├── bin\
+    ├── conf\
+    ├── lib\
+    └── webapps\
+```
+
+### 1-2. IntelliJ Run Configuration 등록
+
+```
+① 상단 메뉴 Run → Edit Configurations
+② 좌상단 + 클릭 → Tomcat Server → Local 선택
+③ Server 탭 설정:
+   - Application server: [Configure...] 클릭
+     → Tomcat Home: C:\tomcat9 지정 → OK
+   - HTTP port: 8080
+④ Deployment 탭 설정:
+   - + 클릭 → Artifact 선택
+   - goods-legacy:war exploded 선택
+   - Application context: /mmall
+⑤ Apply → OK
+```
+
+### 1-3. 실행 / 디버깅
+
+| 버튼 | 동작 |
+|------|------|
+| ▶ (Run) | 일반 실행 |
+| 🐛 (Debug) | 중단점 디버깅 — **코드 중간에서 변수값 확인 가능** |
+
+중단점 설정 방법:
+```
+Controller 코드 줄 번호 왼쪽 클릭 → 빨간 점(●) 생성
+→ Debug 모드로 실행
+→ 해당 줄에서 실행이 멈추고 변수 상태 확인 가능
+```
+
+접속: `http://localhost:8080/mmall/goods/goodsDetail.do?gdCd=2735991`
+
+---
+
+## 2. 로컬 실행 (Maven 내장 Tomcat — Cargo)
 
 ### 터미널에서 실행
 
@@ -48,6 +99,9 @@ Goals       : cargo:run
 ```
 
 4. `Apply → OK` 후 ▶ 버튼으로 실행
+
+> Cargo는 Tomcat을 직접 설치하지 않고 빠르게 띄울 때 쓰는 방식.
+> 중단점 디버깅은 안 되므로 실무에서는 위 **1번 방식(IntelliJ + Tomcat 직접 연결)** 을 사용한다.
 
 ---
 
@@ -162,8 +216,8 @@ COMMIT;
    → "DATABASE IS READY TO USE!" 메시지 확인
 
 3. 앱 실행
-   mvn tomcat7:run
-   (또는 IntelliJ ▶ 버튼)
+   IntelliJ ▶ 버튼 (Tomcat 직접 연결 방식 — 권장)
+   또는 mvn cargo:run (Cargo 방식)
 
 4. 브라우저 접속
    http://localhost:8080/mmall/goods/goodsDetail.do?gdCd=2735991
