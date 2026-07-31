@@ -120,6 +120,13 @@
             <version>5.10.3</version>
             <scope>test</scope>
         </dependency>
+        <!-- Oracle JDBC 드라이버 : applicationContext.xml DataSource에서 jdbc:oracle:thin 연결에 사용 -->
+        <dependency>
+            <groupId>com.oracle</groupId>
+            <artifactId>ojdbc8</artifactId>
+            <version>19.3</version>
+        </dependency>
+
 
     </dependencies>
 
