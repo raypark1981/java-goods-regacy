@@ -64,6 +64,52 @@ Controller 코드 줄 번호 왼쪽 클릭 → 빨간 점(●) 생성
 
 ---
 
+## 1-4. 핵심 개념 설명
+
+### 아티팩트(Artifact)란?
+
+IntelliJ가 소스코드를 Tomcat에 올릴 수 있는 형태로 패키징한 결과물.
+`mvn package`를 하면 `target/goods-legacy.war` 파일이 생기는 것처럼,
+IntelliJ도 내부적으로 "이 프로젝트를 어떻게 묶을지" 정의해두는 게 아티팩트 설정이다.
+
+- **war exploded**: WAR를 압축하지 않고 폴더 구조 그대로 배포 (IntelliJ 권장 방식, 핫리로드 가능)
+- **war archive**: 실제 `.war` 파일로 압축해서 배포 (운영 서버 배포 시 사용)
+
+### WEB-INF 구조란?
+
+WAR 파일의 표준 디렉토리 구조:
+
+```
+<출력 루트>/
+├── WEB-INF/
+│   ├── web.xml                    ← Tomcat 진입점 (DispatcherServlet 등록)
+│   ├── spring/
+│   │   ├── dispatcher-servlet.xml ← Controller 스캔, ViewResolver
+│   │   └── applicationContext.xml ← DB, MyBatis, 트랜잭션
+│   ├── views/                     ← JSP 파일
+│   ├── classes/                   ← 컴파일된 .class 파일 (Controller, Service 등)
+│   └── lib/                       ← 의존성 jar 파일 (Spring, MyBatis 등)
+└── (정적 자원: css, js, images)
+```
+
+`web.xml`이 없으면 Tomcat이 Spring을 로드하지 못해 아무 URL도 동작하지 않는다.
+아티팩트 생성 시 반드시 webapp 전체가 포함되어야 한다.
+
+### 애플리케이션 컨텍스트(Application Context)란?
+
+브라우저 URL에서 도메인 바로 뒤에 붙는 앱 경로:
+
+```
+http://localhost:8080/mmall/goods/goodsDetail.do
+                     ↑
+              여기가 컨텍스트 경로
+```
+
+이 프로젝트는 `/mmall`로 설계되어 있어서 컨텍스트를 `/mmall`로 설정해야 한다.
+`/goods_legacy`나 `/mall`로 설정하면 URL이 달라져서 접속이 안 된다.
+
+---
+
 ## 2. 로컬 실행 (Maven 내장 Tomcat — Cargo)
 
 ### 터미널에서 실행
