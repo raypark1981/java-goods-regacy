@@ -147,6 +147,41 @@ public void placeOrder(OrderVO order) {
 
 ---
 
+## @Controller 가 @Service 를 찾는 흐름
+
+```java
+@Controller
+public class GoodsController {
+
+    private final GoodsService goodsService;
+
+    public GoodsController(GoodsService goodsService) { // 생성자 주입
+        this.goodsService = goodsService;
+    }
+}
+```
+
+Spring 시작 시 동작 순서:
+
+```
+1. applicationContext.xml → @Service 스캔 → GoodsService Bean 생성
+2. dispatcher-servlet.xml → @Controller 스캔 → GoodsController Bean 생성 시도
+3. 생성자에 GoodsService 필요하다는 걸 인식
+4. 부모 컨텍스트(Root)에서 GoodsService Bean 찾아서 자동 주입
+5. GoodsController Bean 완성
+```
+
+Web Context(자식)는 Root Context(부모) Bean을 참조할 수 있기 때문에 가능하다.
+반대로 Service가 Controller를 참조하는 것은 불가능하다 → 의존성 방향을 강제하는 설계.
+
+| 어노테이션 | 스캔 위치 | 역할 |
+|---|---|---|
+| `@Controller` | `dispatcher-servlet.xml` | 웹 요청 처리 Bean |
+| `@Service` | `applicationContext.xml` | 비즈니스 로직 Bean |
+| `@Mapper` | `applicationContext.xml` | DB 접근 Bean (MyBatis) |
+
+---
+
 ## 정리
 
 ```
