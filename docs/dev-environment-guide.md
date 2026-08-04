@@ -60,7 +60,7 @@ Controller 코드 줄 번호 왼쪽 클릭 → 빨간 점(●) 생성
 → 해당 줄에서 실행이 멈추고 변수 상태 확인 가능
 ```
 
-접속: `http://localhost:8080/mmall/goods/goodsDetail.do?gdCd=2735991`
+접속: `http://localhost:8080/mmall/goods/detail.do?gdCd=2735991`
 
 ---
 
@@ -100,7 +100,7 @@ WAR 파일의 표준 디렉토리 구조:
 브라우저 URL에서 도메인 바로 뒤에 붙는 앱 경로:
 
 ```
-http://localhost:8080/mmall/goods/goodsDetail.do
+http://localhost:8080/mmall/goods/detail.do
                      ↑
               여기가 컨텍스트 경로
 ```
@@ -129,7 +129,7 @@ mvn cargo:run
 
 실행 후 브라우저 접속:
 ```
-http://localhost:8080/mmall/goods/goodsDetail.do?gdCd=2735991
+http://localhost:8080/mmall/goods/detail.do?gdCd=2735991
 ```
 
 ### IntelliJ에서 실행 (Run Configuration 등록)
@@ -266,7 +266,7 @@ COMMIT;
    또는 mvn cargo:run (Cargo 방식)
 
 4. 브라우저 접속
-   http://localhost:8080/mmall/goods/goodsDetail.do?gdCd=2735991
+   http://localhost:8080/mmall/goods/detail.do?gdCd=2735991
 ```
 
 ---

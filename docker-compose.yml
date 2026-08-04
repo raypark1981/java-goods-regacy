@@ -1,0 +1,23 @@
+services:
+
+  oracle-db:
+    image: gvenzl/oracle-xe:21-slim
+    platform: linux/amd64
+    container_name: mmall-oracle
+    environment:
+      ORACLE_PASSWORD: oracle123       # sys/system 비밀번호
+      APP_USER: mmall                  # 앱 전용 유저
+      APP_USER_PASSWORD: mmall123
+    ports:
+      - "1521:1521"
+    volumes:
+      - oracle-data:/opt/oracle/oradata
+      - ./sql/init:/container-entrypoint-initdb.d  # 초기 SQL 자동 실행
+    healthcheck:
+      test: ["CMD", "healthcheck.sh"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+volumes:
+  oracle-data:

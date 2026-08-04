@@ -29,9 +29,9 @@
     <bean id="dataSource" class="org.apache.commons.dbcp2.BasicDataSource"
           destroy-method="close">
         <property name="driverClassName" value="oracle.jdbc.OracleDriver"/>
-        <property name="url" value="jdbc:oracle:thin:@//localhost:1521/FREEPDB1"/>
-        <property name="username" value="study"/>
-        <property name="password" value="study1234"/>
+        <property name="url" value="jdbc:oracle:thin:@//localhost:1521/XEPDB1"/>
+        <property name="username" value="mmall"/>
+        <property name="password" value="mmall123"/>
         <property name="initialSize" value="5"/>
         <property name="maxTotal" value="20"/>
         <property name="maxIdle" value="10"/>
