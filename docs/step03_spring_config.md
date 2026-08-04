@@ -1,5 +1,30 @@
 # Step 03 — Spring 설정 XML (dispatcher-servlet.xml / applicationContext.xml)
 
+## 실행 순서: Tomcat → Spring → DispatcherServlet
+
+```
+Tomcat 시작
+  └── web.xml 읽기
+        ├── ContextLoaderListener 실행
+        │     └── applicationContext.xml 로드
+        │           └── DB, MyBatis, Service, DAO Bean 생성  ← Root Context
+        │
+        └── DispatcherServlet 초기화 (load-on-startup: 1)
+              └── dispatcher-servlet.xml 로드
+                    └── Controller, ViewResolver Bean 생성   ← Servlet Context
+
+요청이 들어오면
+  └── Tomcat이 URL 패턴 확인 (web.xml)
+        └── *.do → DispatcherServlet
+              └── @RequestMapping 찾아서 Controller 실행
+```
+
+Root Context가 먼저 뜨고, 그 다음 Servlet Context가 뜬다.  
+Servlet Context(자식)는 Root Context(부모) Bean을 참조할 수 있다.  
+Controller가 Service를 주입받을 수 있는 이유가 이 부모/자식 관계 때문이다.
+
+---
+
 ## 왜 설정 파일이 두 개인가?
 
 Spring MVC 레거시 앱은 두 개의 ApplicationContext를 계층으로 운영한다.

@@ -23,7 +23,8 @@
     <!-- 2. Spring MVC 어노테이션 활성화             -->
     <!--    @RequestMapping, @GetMapping 등이 동작하려면 필수 -->
     <!-- ============================================ -->
-    <mvc:annotation-driven/>
+    <bean id="mvcConversionService" class="org.springframework.format.support.DefaultFormattingConversionService"/>
+    <mvc:annotation-driven conversion-service="mvcConversionService"/>
 
     <!-- ============================================ -->
     <!-- 3. 정적 자원 처리                           -->
@@ -31,8 +32,7 @@
     <!--    거치지 않고 바로 파일 반환               -->
     <!-- ============================================ -->
     <mvc:resources mapping="/resources/**" location="/resources/"/>
-    <!-- Swagger UI가 참조하는 WebJar 정적 리소스를 직접 서빙 -->
-    <mvc:resources mapping="/webjars/**" location="classpath:/META-INF/resources/webjars/"/>
+    <mvc:default-servlet-handler/>
 
     <!-- ============================================ -->
     <!-- 4. ViewResolver                             -->

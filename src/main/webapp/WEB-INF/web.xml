@@ -74,10 +74,6 @@
         <servlet-name>dispatcher</servlet-name>
         <url-pattern>/v3/api-docs/*</url-pattern>
     </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>dispatcher</servlet-name>
-        <url-pattern>/webjars/*</url-pattern>
-    </servlet-mapping>
 
     <!-- ============================================ -->
     <!-- 4. 기본 페이지 설정                          -->
