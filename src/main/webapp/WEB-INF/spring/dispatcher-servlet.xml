@@ -16,7 +16,8 @@
     <!--    해당 패키지에서 @Controller 붙은 클래스를 -->
     <!--    자동으로 Bean으로 등록                   -->
     <!-- ============================================ -->
-    <context:component-scan base-package="com.hyundaicard.mmall.controller"/>
+    <context:component-scan base-package="com.hyundaicard.mmall.controller, com.hyundaicard.mmall.config"/>
+    <context:component-scan base-package="org.springdoc"/>
 
     <!-- ============================================ -->
     <!-- 2. Spring MVC 어노테이션 활성화             -->
@@ -30,6 +31,8 @@
     <!--    거치지 않고 바로 파일 반환               -->
     <!-- ============================================ -->
     <mvc:resources mapping="/resources/**" location="/resources/"/>
+    <!-- Swagger UI가 참조하는 WebJar 정적 리소스를 직접 서빙 -->
+    <mvc:resources mapping="/webjars/**" location="classpath:/META-INF/resources/webjars/"/>
 
     <!-- ============================================ -->
     <!-- 4. ViewResolver                             -->

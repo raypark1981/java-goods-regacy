@@ -58,6 +58,26 @@
         <!-- *.do 패턴 : URL이 .do로 끝나는 요청만 DispatcherServlet이 처리 -->
         <url-pattern>*.do</url-pattern>
     </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>dispatcher</servlet-name>
+        <url-pattern>/swagger-ui*</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>dispatcher</servlet-name>
+        <url-pattern>/swagger-ui/*</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>dispatcher</servlet-name>
+        <url-pattern>/v3/api-docs*</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>dispatcher</servlet-name>
+        <url-pattern>/v3/api-docs/*</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>dispatcher</servlet-name>
+        <url-pattern>/webjars/*</url-pattern>
+    </servlet-mapping>
 
     <!-- ============================================ -->
     <!-- 4. 기본 페이지 설정                          -->

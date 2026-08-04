@@ -134,6 +134,13 @@
             <version>2.17.1</version>
         </dependency>
 
+        <!-- Swagger UI (springdoc-openapi 1.x : Spring MVC 5 + Java 11 호환) -->
+        <dependency>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-ui</artifactId>
+            <version>1.6.15</version>
+        </dependency>
+
     </dependencies>
 
     <build>
