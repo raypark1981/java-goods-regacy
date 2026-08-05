@@ -6,7 +6,6 @@
 <head>
     <meta charset="UTF-8">
     <title>${goods.gdNm}</title>
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/goods.css">
 </head>
 <body>
 

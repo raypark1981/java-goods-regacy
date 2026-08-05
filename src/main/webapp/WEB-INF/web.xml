@@ -55,8 +55,13 @@
 
     <servlet-mapping>
         <servlet-name>dispatcher</servlet-name>
-        <!-- *.do 패턴 : URL이 .do로 끝나는 요청만 DispatcherServlet이 처리 -->
+        <!-- *.do : 기존 mmall 패턴 -->
         <url-pattern>*.do</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>dispatcher</servlet-name>
+        <!-- *.nhd : 운영 hmfrnt 패턴 -->
+        <url-pattern>*.nhd</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>dispatcher</servlet-name>

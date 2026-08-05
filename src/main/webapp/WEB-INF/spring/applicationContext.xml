@@ -12,19 +12,15 @@
            http://www.springframework.org/schema/tx/spring-tx.xsd">
 
     <!-- ============================================ -->
-    <!-- 1. Service, DAO 자동 스캔                   -->
-    <!--    Controller는 dispatcher-servlet.xml에서  -->
-    <!--    스캔하므로 여기서는 제외                 -->
+    <!-- 1. Service, DAO 자동 스캔 (Controller 제외)  -->
     <!-- ============================================ -->
-    <context:component-scan base-package="com.hyundaicard.mmall">
+    <context:component-scan base-package="hmfrnt">
         <context:exclude-filter type="annotation"
             expression="org.springframework.stereotype.Controller"/>
     </context:component-scan>
 
     <!-- ============================================ -->
-    <!-- 2. DataSource (DB 연결 정보)                -->
-    <!--    실제 운영에서는 JNDI나 외부 프로퍼티로  -->
-    <!--    분리하는 게 일반적                       -->
+    <!-- 2. DataSource                               -->
     <!-- ============================================ -->
     <bean id="dataSource" class="org.apache.commons.dbcp2.BasicDataSource"
           destroy-method="close">
@@ -39,17 +35,13 @@
 
     <!-- ============================================ -->
     <!-- 3. MyBatis SqlSessionFactory               -->
-    <!--    MyBatis가 DB와 통신하는 핵심 객체        -->
     <!-- ============================================ -->
     <bean id="sqlSessionFactory"
           class="org.mybatis.spring.SqlSessionFactoryBean">
         <property name="dataSource" ref="dataSource"/>
-        <!-- SQL XML 파일 위치 -->
         <property name="mapperLocations" value="classpath:mapper/**/*.xml"/>
-        <!-- MyBatis 전역 설정 -->
         <property name="configuration">
             <bean class="org.apache.ibatis.session.Configuration">
-                <!-- snake_case DB 컬럼 → camelCase Java 필드 자동 매핑 -->
                 <property name="mapUnderscoreToCamelCase" value="true"/>
             </bean>
         </property>
@@ -57,17 +49,14 @@
 
     <!-- ============================================ -->
     <!-- 4. MyBatis Mapper 자동 스캔                 -->
-    <!--    @Mapper 어노테이션 붙은 인터페이스를      -->
-    <!--    자동으로 Bean으로 등록                   -->
     <!-- ============================================ -->
     <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
-        <property name="basePackage" value="com.hyundaicard.mmall.dao"/>
+        <property name="basePackage" value="hmfrnt"/>
         <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"/>
     </bean>
 
     <!-- ============================================ -->
     <!-- 5. 트랜잭션 관리자                          -->
-    <!--    @Transactional 어노테이션이 동작하게 함  -->
     <!-- ============================================ -->
     <bean id="transactionManager"
           class="org.springframework.jdbc.datasource.DataSourceTransactionManager">

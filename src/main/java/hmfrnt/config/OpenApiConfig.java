@@ -1,4 +1,4 @@
-package com.hyundaicard.mmall.config;
+package hmfrnt.config;
 
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
@@ -12,8 +12,8 @@ public class OpenApiConfig {
     public OpenAPI openAPI() {
         return new OpenAPI()
                 .info(new Info()
-                        .title("M포인트몰 상품 API")
+                        .title("hmfrnt API")
                         .version("1.0.0")
-                        .description("현대카드 M포인트몰 레거시 시스템 상품 API"));
+                        .description("현대백화점 프론트 레거시 시스템 API"));
     }
 }

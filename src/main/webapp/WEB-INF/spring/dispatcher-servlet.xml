@@ -13,34 +13,27 @@
 
     <!-- ============================================ -->
     <!-- 1. @Controller 자동 스캔                    -->
-    <!--    해당 패키지에서 @Controller 붙은 클래스를 -->
-    <!--    자동으로 Bean으로 등록                   -->
     <!-- ============================================ -->
-    <context:component-scan base-package="com.hyundaicard.mmall.controller, com.hyundaicard.mmall.config"/>
+    <context:component-scan base-package="hmfrnt"/>
     <context:component-scan base-package="org.springdoc"/>
 
     <!-- ============================================ -->
     <!-- 2. Spring MVC 어노테이션 활성화             -->
-    <!--    @RequestMapping, @GetMapping 등이 동작하려면 필수 -->
     <!-- ============================================ -->
     <bean id="mvcConversionService" class="org.springframework.format.support.DefaultFormattingConversionService"/>
     <mvc:annotation-driven conversion-service="mvcConversionService"/>
 
     <!-- ============================================ -->
     <!-- 3. 정적 자원 처리                           -->
-    <!--    /resources/** 경로는 DispatcherServlet을 -->
-    <!--    거치지 않고 바로 파일 반환               -->
     <!-- ============================================ -->
     <mvc:resources mapping="/resources/**" location="/resources/"/>
     <mvc:default-servlet-handler/>
 
     <!-- ============================================ -->
-    <!-- 4. ViewResolver                             -->
-    <!--    Controller가 "goods/goodsDetail" 반환 시 -->
-    <!--    → /WEB-INF/views/goods/goodsDetail.jsp  -->
+    <!-- 4. ViewResolver: WEB-INF/jsp/{업무}/{화면}.jsp -->
     <!-- ============================================ -->
     <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
-        <property name="prefix" value="/WEB-INF/views/"/>
+        <property name="prefix" value="/WEB-INF/jsp/"/>
         <property name="suffix" value=".jsp"/>
         <property name="order" value="1"/>
     </bean>
