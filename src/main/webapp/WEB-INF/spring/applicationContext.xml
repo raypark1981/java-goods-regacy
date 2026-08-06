@@ -52,6 +52,7 @@
     <!-- ============================================ -->
     <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
         <property name="basePackage" value="hmfrnt"/>
+        <property name="annotationClass" value="org.apache.ibatis.annotations.Mapper"/>
         <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"/>
     </bean>
 

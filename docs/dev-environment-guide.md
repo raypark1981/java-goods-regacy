@@ -146,8 +146,51 @@ Goals       : cargo:run
 
 4. `Apply → OK` 후 ▶ 버튼으로 실행
 
-> Cargo는 Tomcat을 직접 설치하지 않고 빠르게 띄울 때 쓰는 방식.
-> 중단점 디버깅은 안 되므로 실무에서는 위 **1번 방식(IntelliJ + Tomcat 직접 연결)** 을 사용한다.
+> Cargo는 Tomcat을 직접 설치하지 않고 빠르게 띄울 때 쓰는 방식이다.
+
+### Cargo 디버그 실행
+
+`mvn cargo:run`도 JVM 디버그 포트를 열면 중단점 디버깅이 가능하다.
+
+#### 1) 한 번만 적용해서 같은 터미널에서 계속 사용
+
+```bash
+export MAVEN_OPTS="-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005"
+mvn cargo:run
+```
+
+- 현재 터미널 세션에서만 적용된다.
+- 새 터미널을 열면 다시 `export` 해야 한다.
+
+#### 2) 자주 쓰면 alias 등록
+
+`~/.zshrc`에 아래 한 줄 추가:
+
+```bash
+alias mvn-debug='MAVEN_OPTS="-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005" mvn'
+```
+
+저장 후 터미널에서 반영:
+
+```bash
+source ~/.zshrc
+```
+
+실행:
+
+```bash
+mvn-debug cargo:run
+```
+
+#### 3) IntelliJ Remote Debug 연결
+
+1. `Run → Edit Configurations`
+2. `+` → `Remote JVM Debug`
+3. 포트 `5005` 설정
+4. `mvn cargo:run` 또는 `mvn-debug cargo:run` 실행 후 Debug 연결
+
+> Cargo 디버그는 빠르게 띄워서 확인할 때 유용하고,
+> 서버 설정을 세밀하게 다루거나 일반적인 실무 디버깅은 위 **1번 방식(IntelliJ + Tomcat 직접 연결)** 이 더 편하다.
 
 ---
 
