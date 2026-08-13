@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="hmmbl.pe.pea.service.dao.PEAAutoChargeDAO">
+
+    <insert id="insertChrgAcnt" parameterType="hmmbl.pe.pea.vo.PEAAutoChargeVO">
+        /* PEAAutoChargeDAO.insertChrgAcnt */
+        INSERT INTO AP_CUST_CHRG_ACNT_MNG (
+            MCUST_NO
+          , ACNT_SEQ
+          , CUST_KEY
+          , BILL_KEY
+          , BANK_GBCD
+          , RGST_ID
+          , RGST_IP
+          , REG_DTM
+          , CHGP_ID
+          , CHGP_IP
+          , CHG_DTM
+        ) VALUES (
+            #{mcustNo}
+          , AP_CUST_CHRG_ACNT_MNG_SEQ.NEXTVAL
+          , #{custKey}
+          , #{billKey}
+          , #{bankGbcd}
+          , #{rgstId}
+          , #{rgstIp}
+          , TO_CHAR(SYSDATE, 'YYYYMMDDHH24MISS')
+          , #{chgpId}
+          , #{chgpIp}
+          , TO_CHAR(SYSDATE, 'YYYYMMDDHH24MISS')
+        )
+    </insert>
+
+    <sql id="chrgAcntColumns">
+        MCUST_NO    AS mcustNo
+      , ACNT_SEQ   AS acntSeq
+      , CUST_KEY   AS custKey
+      , BILL_KEY   AS billKey
+      , BANK_GBCD  AS bankGbcd
+      , BANK_ACNT_NM AS bankAcntNm
+      , ACNT_NO    AS acntNo
+      , LVL_PRTY   AS lvlPrty
+      , RGST_ID    AS rgstId
+      , RGST_IP    AS rgstIp
+      , REG_DTM    AS regDtm
+      , CHGP_ID    AS chgpId
+      , CHGP_IP    AS chgpIp
+      , CHG_DTM    AS chgDtm
+    </sql>
+
+    <select id="selectChrgAcntList" parameterType="hmmbl.pe.pea.vo.PEAAutoChargeReqVO" resultType="hmmbl.pe.pea.vo.PEAAutoChargeVO">
+        /* PEAAutoChargeDAO.selectChrgAcntList */
+        SELECT
+            <include refid="chrgAcntColumns"/>
+        FROM
+            AP_CUST_CHRG_ACNT_MNG
+        <where>
+            <if test="mcustNo != null and mcustNo != ''">
+                AND MCUST_NO = #{mcustNo}
+            </if>
+            <if test="acntSeq != null">
+                AND ACNT_SEQ = #{acntSeq}
+            </if>
+        </where>
+        ORDER BY
+            LVL_PRTY ASC
+    </select>
+
+    <select id="selectBillingKey" parameterType="String" resultType="hmmbl.pe.pea.vo.PEAAutoChargeVO">
+        /* PEAAutoChargeDAO.selectBillingKey */
+        SELECT
+            MCUST_NO    AS mcustNo
+          , BILL_KEY    AS billKey
+        FROM
+            AP_CUST_CHRG_ACNT_MNG
+        WHERE
+            MCUST_NO = #{mcustNo}
+        ORDER BY
+            LVL_PRTY ASC
+        FETCH FIRST 1 ROWS ONLY
+    </select>
+
+</mapper>

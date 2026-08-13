@@ -14,7 +14,7 @@
     <!-- ============================================ -->
     <!-- 1. Service, DAO 자동 스캔 (Controller 제외)  -->
     <!-- ============================================ -->
-    <context:component-scan base-package="hmfrnt">
+    <context:component-scan base-package="hmfrnt,hmmbl">
         <context:exclude-filter type="annotation"
             expression="org.springframework.stereotype.Controller"/>
     </context:component-scan>

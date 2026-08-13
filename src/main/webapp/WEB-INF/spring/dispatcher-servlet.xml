@@ -14,7 +14,7 @@
     <!-- ============================================ -->
     <!-- 1. @Controller 자동 스캔                    -->
     <!-- ============================================ -->
-    <context:component-scan base-package="hmfrnt"/>
+    <context:component-scan base-package="hmfrnt,hmmbl"/>
     <context:component-scan base-package="org.springdoc"/>
 
     <!-- ============================================ -->

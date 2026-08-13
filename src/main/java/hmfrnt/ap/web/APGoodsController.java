@@ -2,7 +2,7 @@ package hmfrnt.ap.web;
 
 import hmfrnt.ap.service.APGoodsService;
 import hmfrnt.ap.vo.APGoodsVO;
-import hmfrnt.web.ApiResponseVO;
+import hmfrnt.web.ResultData;
 import hmfrnt.web.BaseController;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -32,16 +32,16 @@ public class APGoodsController extends BaseController {
     @Operation(summary = "상품 목록 조회")
     @RequestMapping("/list.nhd")
     @ResponseBody
-    public ApiResponseVO<List<APGoodsVO>> goodsList() {
-        return ApiResponseVO.success(apGoodsService.getGoodsList());
+    public ResultData<List<APGoodsVO>> goodsList() {
+        return ResultData.success(apGoodsService.getGoodsList());
     }
 
     @Operation(summary = "상품 상세 조회")
     @RequestMapping("/detail.nhd")
     @ResponseBody
-    public ApiResponseVO<APGoodsVO> goodsDetail(
+    public ResultData<APGoodsVO> goodsDetail(
             @Parameter(description = "상품코드", example = "2735991")
             @RequestParam("gdCd") String gdCd) {
-        return ApiResponseVO.success(apGoodsService.getGoodsDetail(gdCd));
+        return ResultData.success(apGoodsService.getGoodsDetail(gdCd));
     }
 }
