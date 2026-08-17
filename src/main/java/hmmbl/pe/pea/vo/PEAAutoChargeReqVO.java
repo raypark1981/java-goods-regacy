@@ -14,10 +14,12 @@ public class PEAAutoChargeReqVO extends BaseVo {
     private int chargeAmt;        // 충전금액
     private String orderId;       // 토스 주문ID
     private String posNo;         // POS번호
-    private String orderName;     // 주문명
+    private String orderName;     // 주문명₩
     private String customerEmail; // 고객 이메일
     private String customerName;  // 고객명
     private String authKey;       // 토스 빌링 인증키 (successUrl 수신값)
     private String customerKey;   // 토스 고객 식별값
+    private String paymentKey;    // 취소할 토스 결제키
+    private String cancelReason;  // 취소 사유
 
 }

@@ -1,0 +1,20 @@
+{
+  "permissions": {
+    "allow": [
+      "mcp__tosspayments-integration-guide__get-v2-documents",
+      "mcp__tosspayments-integration-guide__get-glossary-documents",
+      "Bash(mvn compile*)",
+      "Bash(mvn -q compile*)",
+      "Bash(mvn -q clean compile*)",
+      "Bash(mvn -q clean test-compile*)",
+      "Bash(mvn test*)",
+      "Bash(jar tf *)",
+      "Bash(npx tsc*)",
+      "Bash(curl -v --connect-timeout *)",
+      "mcp__idea__get_project_modules",
+      "mcp__idea__get_all_open_file_paths",
+      "mcp__idea__get_file_problems",
+      "mcp__idea__build_project"
+    ]
+  }
+}

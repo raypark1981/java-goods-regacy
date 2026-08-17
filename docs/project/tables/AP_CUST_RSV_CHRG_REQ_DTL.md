@@ -1,5 +1,8 @@
 # AP_CUST_RSV_CHRG_REQ_DTL (고객 예약 충전 신청 내역)
 
+> **테이블명 해석**: `AP`(승인) + `CUST`(고객) + `RSV`(예약) + `CHRG`(충전) + `REQ`(신청/요청) + `DTL`(상세/내역)  
+> **기본 설명**: 승인 업무에서 고객의 예약충전 신청 상세 내역을 관리하는 테이블
+
 > **구분**: 신규 테이블  
 > **업무**: PE (선불충전)  
 > **용도**: 고객 예약 충전 신청 조건 및 계좌 충전 금액 관리
@@ -78,4 +81,22 @@ COMMENT ON COLUMN AP_CUST_RSV_CHRG_REQ_DTL.REG_DTM             IS '등록일시'
 COMMENT ON COLUMN AP_CUST_RSV_CHRG_REQ_DTL.CHGP_ID             IS '변경자ID';
 COMMENT ON COLUMN AP_CUST_RSV_CHRG_REQ_DTL.CHGP_IP             IS '변경자IP';
 COMMENT ON COLUMN AP_CUST_RSV_CHRG_REQ_DTL.CHG_DTM             IS '변경일시';
+
+-- SEQ_NO 채번용 시퀀스
+CREATE SEQUENCE AP_CUST_RSV_CHRG_REQ_DTL_SEQ
+    START WITH 1
+    INCREMENT BY 1
+    NOCACHE;
+```
+
+---
+
+## 조회 쿼리 예제
+
+```sql
+-- 전체 조회
+SELECT * FROM AP_CUST_RSV_CHRG_REQ_DTL;
+
+-- 특정 회원의 예약 충전 신청 내역 (삭제되지 않은 건만)
+SELECT * FROM AP_CUST_RSV_CHRG_REQ_DTL WHERE MCUST_NO = 'TEST0001' AND (DSL_YN IS NULL OR DSL_YN != 'Y');
 ```

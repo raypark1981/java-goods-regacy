@@ -12,6 +12,8 @@
           , CUST_KEY
           , BILL_KEY
           , BANK_GBCD
+          , BANK_ACNT_NM
+          , ACNT_NO
           , RGST_ID
           , RGST_IP
           , REG_DTM
@@ -24,6 +26,8 @@
           , #{custKey}
           , #{billKey}
           , #{bankGbcd}
+          , #{bankAcntNm, jdbcType=VARCHAR}
+          , #{acntNo, jdbcType=VARCHAR}
           , #{rgstId}
           , #{rgstIp}
           , TO_CHAR(SYSDATE, 'YYYYMMDDHH24MISS')
@@ -72,13 +76,289 @@
         /* PEAAutoChargeDAO.selectBillingKey */
         SELECT
             MCUST_NO    AS mcustNo
+          , CUST_KEY    AS custKey
           , BILL_KEY    AS billKey
+          , BANK_GBCD   AS bankGbcd
+          , ACNT_SEQ    AS acntSeq
+          , ACNT_NO     AS acntNo
         FROM
             AP_CUST_CHRG_ACNT_MNG
         WHERE
             MCUST_NO = #{mcustNo}
         ORDER BY
             LVL_PRTY ASC
+        FETCH FIRST 1 ROWS ONLY
+    </select>
+
+    <insert id="insertAutoChrgReqDtl" parameterType="hmmbl.pe.pea.vo.PEAAutoChrgReqDtlVO">
+        /* PEAAutoChargeDAO.insertAutoChrgReqDtl */
+        INSERT INTO AP_CUST_AUTO_CHRG_REQ_DTL (
+            MCUST_NO
+          , AUTO_CHRG_YN
+          , PTY1_ACNT_SEQ
+          , PTY2_ACNT_SEQ
+          , RGST_ID
+          , RGST_IP
+          , REG_DTM
+          , CHGP_ID
+          , CHGP_IP
+          , CHG_DTM
+        ) VALUES (
+            #{mcustNo}
+          , #{autoChrgYn}
+          , #{pty1AcntSeq}
+          , #{pty2AcntSeq}
+          , #{rgstId}
+          , #{rgstIp}
+          , TO_CHAR(SYSDATE, 'YYYYMMDDHH24MISS')
+          , #{chgpId}
+          , #{chgpIp}
+          , TO_CHAR(SYSDATE, 'YYYYMMDDHH24MISS')
+        )
+    </insert>
+
+    <insert id="insertPntAutoChrgHis" parameterType="hmmbl.pe.pea.vo.PEAPntAutoChrgHisVO">
+        /* PEAAutoChargeDAO.insertPntAutoChrgHis */
+        INSERT INTO AP_CUST_PNT_AUTO_CHRG_HIS (
+            LOG_ID
+          , EXEC_DTM
+          , MCUST_NO
+          , PAYMENT_KEY
+          , ORDER_ID
+          , CHRG_TYPE_GBCD
+          , RSV_CHRG_MTHD_GBCD
+          , RSV_CHRG_PRD_GBCD
+          , RSV_CHRG_DT_GBCD
+          , RSV_BSIC_AMT_GBCD
+          , ACNT_CHRG_AMT
+          , REAL_CHRG_AMT
+          , ACNT_SEQ
+          , BANK_GBCD
+          , ACNT_NO
+          , PROC_RST_GBCD
+          , ERR_CD
+          , ERR_MSG_CNTN
+        ) VALUES (
+            TO_CHAR(AP_CUST_PNT_AUTO_CHRG_HIS_SEQ.NEXTVAL)
+          , TO_CHAR(SYSDATE, 'YYYYMMDDHH24MISS')
+          , #{mcustNo}
+          , #{paymentKey}
+          , #{orderId}
+          , #{chrgTypeGbcd}
+          , #{rsvChrgMthdGbcd}
+          , #{rsvChrgPrdGbcd}
+          , #{rsvChrgDtGbcd, jdbcType=VARCHAR}
+          , #{rsvBsicAmtGbcd, jdbcType=VARCHAR}
+          , #{acntChrgAmt}
+          , #{realChrgAmt}
+          , #{acntSeq}
+          , #{bankGbcd}
+          , #{acntNo}
+          , #{procRstGbcd}
+          , #{errCd}
+          , #{errMsgCntn}
+        )
+    </insert>
+
+    <insert id="insertPntInf" parameterType="hmmbl.pe.pea.vo.PEAPntInfVO">
+        /* PEAAutoChargeDAO.insertPntInf */
+        INSERT INTO AP_CUST_PNT_INF (
+            MCUST_NO
+          , AVLB_PNT
+          , TSALE_ACMT_AMT
+          , ACM_PNT
+          , ACM_CNT
+          , ACM_CNCL_PNT
+          , ACM_CNCL_CNT
+          , CAMP_PNT
+          , CAMP_CNT
+          , CAMP_CNCL_PNT
+          , CAMP_CNCL_CNT
+          , CLUB_ACM_PNT
+          , CLUB_ACM_CNT
+          , CLUB_ACM_CNCL_PNT
+          , CLUB_ACM_CNCL_CNT
+          , USE_PNT
+          , USE_CNT
+          , USE_CNCL_PNT
+          , USE_CNCL_CNT
+          , EXTN_PNT
+          , EXTN_CNT
+          , TRF_PNT
+          , TRF_CNT
+          , TAKE_PNT
+          , TAKE_CNT
+          , TRF_STBY_PNT
+          , PNT_EXCH_RCV_PNT
+          , PNT_EXCH_RCV_PNT_CNT
+          , PNT_EXCH_SEND_PNT
+          , PNT_EXCH_SEND_PNT_CNT
+          , FRST_JOIN_DT
+          , FRST_APRVL_DT
+          , LAST_APRVL_DT
+          , FRST_APRVL_PTCO_ID
+          , FRST_APRVL_FRCS_ID
+          , LAST_APRVL_PTCO_ID
+          , LAST_APRVL_FRCS_ID
+          , LAST_APLEDG_PTCNO
+          , MOPH_OCCP_CERT_NO
+          , MOPH_OCCP_CERT_NO_SEND_DTM
+          , APP_CRD_FRST_ACM_DT
+          , APP_FRST_APRVL_LEDG_NO
+          , RGST_ID
+          , RGST_IP
+          , REG_DTM
+          , CHGP_ID
+          , CHGP_IP
+          , CHG_DTM
+          , PNT_TYPE_GBCD
+        ) VALUES (
+            #{mcustNo}
+          , #{avlbPnt}
+          , #{tsaleAcmtAmt}
+          , #{acmPnt}
+          , #{acmCnt}
+          , #{acmCnclPnt}
+          , #{acmCnclCnt}
+          , #{campPnt}
+          , #{campCnt}
+          , #{campCnclPnt}
+          , #{campCnclCnt}
+          , #{clubAcmPnt}
+          , #{clubAcmCnt}
+          , #{clubAcmCnclPnt}
+          , #{clubAcmCnclCnt}
+          , #{usePnt}
+          , #{useCnt}
+          , #{useCnclPnt}
+          , #{useCnclCnt}
+          , #{extnPnt}
+          , #{extnCnt}
+          , #{trfPnt}
+          , #{trfCnt}
+          , #{takePnt}
+          , #{takeCnt}
+          , #{trfStbyPnt}
+          , #{pntExchRcvPnt}
+          , #{pntExchRcvPntCnt}
+          , #{pntExchSendPnt}
+          , #{pntExchSendPntCnt}
+          , #{frstJoinDt}
+          , #{frstAprvlDt}
+          , #{lastAprvlDt}
+          , #{frstAprvlPtcoId}
+          , #{frstAprvlFrcsId}
+          , #{lastAprvlPtcoId}
+          , #{lastAprvlFrcsId}
+          , #{lastApledgPtcno}
+          , #{mophOccpCertNo}
+          , #{mophOccpCertNoSendDtm}
+          , #{appCrdFrstAcmDt}
+          , #{appFrstAprvlLedgNo}
+          , #{rgstId}
+          , #{rgstIp}
+          , TO_CHAR(SYSDATE, 'YYYYMMDDHH24MISS')
+          , #{chgpId}
+          , #{chgpIp}
+          , TO_CHAR(SYSDATE, 'YYYYMMDDHH24MISS')
+          , #{pntTypeGbcd}
+        )
+    </insert>
+
+    <insert id="insertPntPrtyChgHis" parameterType="hmmbl.pe.pea.vo.PEAPntPrtyChgHisVO">
+        /* PEAAutoChargeDAO.insertPntPrtyChgHis */
+        INSERT INTO AP_CUST_PNT_PRTY_CHG_HIS (
+            MCUST_NO
+          , SEQ
+          , PNT_TYPE_GBCD
+          , RGST_ID
+          , RGST_IP
+          , REG_DTM
+          , CHGP_ID
+          , CHGP_IP
+          , CHG_DTM
+        ) VALUES (
+            #{mcustNo}
+          , AP_CUST_PNT_PRTY_CHG_HIS_SEQ.NEXTVAL
+          , #{pntTypeGbcd}
+          , #{rgstId}
+          , #{rgstIp}
+          , TO_CHAR(SYSDATE, 'YYYYMMDDHH24MISS')
+          , #{chgpId}
+          , #{chgpIp}
+          , TO_CHAR(SYSDATE, 'YYYYMMDDHH24MISS')
+        )
+    </insert>
+
+    <insert id="insertRsvChrgReqDtl" parameterType="hmmbl.pe.pea.vo.PEARsvChrgReqDtlVO">
+        /* PEAAutoChargeDAO.insertRsvChrgReqDtl */
+        INSERT INTO AP_CUST_RSV_CHRG_REQ_DTL (
+            MCUST_NO
+          , SEQ_NO
+          , PNT_ACNT_GCD
+          , PNT_ACNT_SNO
+          , RSV_CHRG_MTHD_GBCD
+          , RSV_CHRG_PRD_GCD
+          , RSV_ORG_DUJ_GBCD
+          , RSV_CHRG_DUJ
+          , RSV_BSC_AMT_GBCD
+          , RSV_BSC_AMT
+          , ACNT_CHRG_AMT
+          , DSL_YN
+          , DEL_DTM
+          , RGST_ID
+          , RGST_IP
+          , REG_DTM
+          , CHGP_ID
+          , CHGP_IP
+          , CHG_DTM
+        ) VALUES (
+            #{mcustNo}
+          , AP_CUST_RSV_CHRG_REQ_DTL_SEQ.NEXTVAL
+          , #{pntAcntGcd}
+          , #{pntAcntSno}
+          , #{rsvChrgMthdGbcd}
+          , #{rsvChrgPrdGcd}
+          , #{rsvOrgDujGbcd}
+          , #{rsvChrgDuj}
+          , #{rsvBscAmtGbcd}
+          , #{rsvBscAmt}
+          , #{acntChrgAmt}
+          , #{dslYn}
+          , #{delDtm}
+          , #{rgstId}
+          , #{rgstIp}
+          , TO_CHAR(SYSDATE, 'YYYYMMDDHH24MISS')
+          , #{chgpId}
+          , #{chgpIp}
+          , TO_CHAR(SYSDATE, 'YYYYMMDDHH24MISS')
+        )
+    </insert>
+
+    <select id="selectMaxChargeAmt" resultType="int">
+        /* PEAAutoChargeDAO.selectMaxChargeAmt */
+        <!-- TODO 하드코딩 -> 사용자 보유한도 조회 로직으로 교체 필요 -->
+        SELECT 2000000 FROM DUAL
+    </select>
+
+    <select id="selectPntAutoChrgHisByPaymentKey" resultType="hmmbl.pe.pea.vo.PEAPntAutoChrgHisVO">
+        /* PEAAutoChargeDAO.selectPntAutoChrgHisByPaymentKey */
+        SELECT
+            MCUST_NO      AS mcustNo
+          , PAYMENT_KEY   AS paymentKey
+          , ORDER_ID      AS orderId
+          , ACNT_CHRG_AMT AS acntChrgAmt
+          , REAL_CHRG_AMT AS realChrgAmt
+          , ACNT_SEQ      AS acntSeq
+          , BANK_GBCD     AS bankGbcd
+          , ACNT_NO       AS acntNo
+        FROM
+            AP_CUST_PNT_AUTO_CHRG_HIS
+        WHERE
+            MCUST_NO = #{mcustNo}
+            AND PAYMENT_KEY = #{paymentKey}
+        ORDER BY
+            EXEC_DTM DESC
         FETCH FIRST 1 ROWS ONLY
     </select>
 

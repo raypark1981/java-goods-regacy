@@ -1,5 +1,8 @@
 # AP_CUST_PNT_INF (고객포인트현황)
 
+> **테이블명 해석**: `AP`(승인) + `CUST`(고객) + `PNT`(포인트) + `INF`(정보/현황)  
+> **기본 설명**: 승인 업무에서 고객별 포인트 보유 현황과 포인트 거래 누적 정보를 관리하는 테이블
+
 > **구분**: 기존 테이블  
 > **업무**: AP (승인) / PE (선불충전)  
 > **용도**: 고객별 포인트 보유/적립/사용/소멸/교환 현황 관리
@@ -68,7 +71,7 @@
 CREATE TABLE AP_CUST_PNT_INF (
     MCUST_NO                    VARCHAR2(10)  NOT NULL,  -- 통합고객번호
     AVLB_PNT                    NUMBER        NOT NULL,  -- 가용포인트
-    TSALE_ACMT_AMT                  NUMBER        NULL,      -- 총적립누적포인트
+    TSALE_ACMT_AMT               NUMBER        NULL,      -- 총적립누적포인트
     ACM_PNT                     NUMBER        NULL,      -- 적립포인트
     ACM_CNT                     NUMBER        NULL,      -- 적립건수
     ACM_CNCL_PNT                NUMBER        NULL,      -- 적립취소포인트
@@ -121,7 +124,7 @@ CREATE TABLE AP_CUST_PNT_INF (
 COMMENT ON TABLE  AP_CUST_PNT_INF                              IS '고객포인트현황';
 COMMENT ON COLUMN AP_CUST_PNT_INF.MCUST_NO                     IS '통합고객번호';
 COMMENT ON COLUMN AP_CUST_PNT_INF.AVLB_PNT                     IS '가용포인트';
-COMMENT ON COLUMN AP_CUST_PNT_INF.TSALE_ACMT_AMT                 IS '총적립누적포인트';
+COMMENT ON COLUMN AP_CUST_PNT_INF.TSALE_ACMT_AMT                IS '총적립누적포인트';
 COMMENT ON COLUMN AP_CUST_PNT_INF.ACM_PNT                      IS '적립포인트';
 COMMENT ON COLUMN AP_CUST_PNT_INF.ACM_CNT                      IS '적립건수';
 COMMENT ON COLUMN AP_CUST_PNT_INF.ACM_CNCL_PNT                 IS '적립취소포인트';
@@ -180,4 +183,16 @@ ALTER TABLE AP_CUST_PNT_INF ADD (
 );
 
 COMMENT ON COLUMN AP_CUST_PNT_INF.PNT_TYPE_GBCD IS '포인트유형구분코드';
+```
+
+---
+
+## 조회 쿼리 예제
+
+```sql
+-- 전체 조회
+SELECT * FROM AP_CUST_PNT_INF;
+
+-- 특정 회원 포인트 현황 조회
+SELECT * FROM AP_CUST_PNT_INF WHERE MCUST_NO = 'TEST0001';
 ```

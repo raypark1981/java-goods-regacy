@@ -3,6 +3,10 @@
     "tosspayments-integration-guide": {
       "command": "npx",
       "args": ["-y", "@tosspayments/integration-guide-mcp@latest"]
+    },
+    "notion": {
+      "type": "http",
+      "url": "https://mcp.notion.com/mcp"
     }
   }
 }

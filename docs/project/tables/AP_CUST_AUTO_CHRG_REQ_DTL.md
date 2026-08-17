@@ -1,5 +1,8 @@
 # AP_CUST_AUTO_CHRG_REQ_DTL (고객 자동충전 신청 내역)
 
+> **테이블명 해석**: `AP`(승인) + `CUST`(고객) + `AUTO`(자동) + `CHRG`(충전) + `REQ`(신청/요청) + `DTL`(상세/내역)  
+> **기본 설명**: 승인 업무에서 고객의 자동충전 신청 상세 내역을 관리하는 테이블
+
 > **구분**: 신규 테이블  
 > **업무**: PE (선불충전)  
 > **용도**: 고객 자동충전 신청 시 1·2순위 계좌 설정 내역 관리  
@@ -28,8 +31,8 @@
 CREATE TABLE AP_CUST_AUTO_CHRG_REQ_DTL (
     MCUST_NO       VARCHAR2(10)  NOT NULL,  -- 통합고객번호
     AUTO_CHRG_YN   VARCHAR2(1)   NOT NULL,  -- 자동충전여부 (Y/N)
-    PTY1_ACNT_SEQ  NUMBER        NOT NULL,  -- 우선계좌순번 (1순위 계좌)
-    PTY2_ACNT_SEQ  NUMBER        NOT NULL,  -- 제외계좌순번 (2순위 계좌)
+    PTY1_ACNT_SEQ  NUMBER        NOT NULL,  -- 1순위계좌순번
+    PTY2_ACNT_SEQ  NUMBER        NOT NULL,  -- 2순위계좌순번
     RGST_ID        VARCHAR2(100) NOT NULL,  -- 등록자ID
     RGST_IP        VARCHAR2(50)  NOT NULL,  -- 등록자IP
     REG_DTM        VARCHAR2(14)  NOT NULL,  -- 등록일시 (yyyyMMddHHmmss)
@@ -42,12 +45,24 @@ CREATE TABLE AP_CUST_AUTO_CHRG_REQ_DTL (
 COMMENT ON TABLE  AP_CUST_AUTO_CHRG_REQ_DTL               IS '고객 자동충전 신청 내역';
 COMMENT ON COLUMN AP_CUST_AUTO_CHRG_REQ_DTL.MCUST_NO      IS '통합고객번호';
 COMMENT ON COLUMN AP_CUST_AUTO_CHRG_REQ_DTL.AUTO_CHRG_YN  IS '자동충전여부 (Y/N)';
-COMMENT ON COLUMN AP_CUST_AUTO_CHRG_REQ_DTL.PTY1_ACNT_SEQ IS '우선계좌순번 (1순위)';
-COMMENT ON COLUMN AP_CUST_AUTO_CHRG_REQ_DTL.PTY2_ACNT_SEQ IS '제외계좌순번 (2순위)';
+COMMENT ON COLUMN AP_CUST_AUTO_CHRG_REQ_DTL.PTY1_ACNT_SEQ IS '1순위계좌순번';
+COMMENT ON COLUMN AP_CUST_AUTO_CHRG_REQ_DTL.PTY2_ACNT_SEQ IS '2순위계좌순번';
 COMMENT ON COLUMN AP_CUST_AUTO_CHRG_REQ_DTL.RGST_ID       IS '등록자ID';
 COMMENT ON COLUMN AP_CUST_AUTO_CHRG_REQ_DTL.RGST_IP       IS '등록자IP';
 COMMENT ON COLUMN AP_CUST_AUTO_CHRG_REQ_DTL.REG_DTM       IS '등록일시';
 COMMENT ON COLUMN AP_CUST_AUTO_CHRG_REQ_DTL.CHGP_ID       IS '변경자ID';
 COMMENT ON COLUMN AP_CUST_AUTO_CHRG_REQ_DTL.CHGP_IP       IS '변경자IP';
 COMMENT ON COLUMN AP_CUST_AUTO_CHRG_REQ_DTL.CHG_DTM       IS '변경일시';
+```
+
+---
+
+## 조회 쿼리 예제
+
+```sql
+-- 전체 조회
+SELECT * FROM AP_CUST_AUTO_CHRG_REQ_DTL;
+
+-- 특정 회원 조회
+SELECT * FROM AP_CUST_AUTO_CHRG_REQ_DTL WHERE MCUST_NO = 'TEST0001';
 ```

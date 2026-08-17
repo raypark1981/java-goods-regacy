@@ -1,5 +1,8 @@
 # AP_CUST_CHRG_ACNT_MNG (고객별 충전 계좌 관리)
 
+> **테이블명 해석**: `AP`(승인) + `CUST`(고객) + `CHRG`(충전) + `ACNT`(계좌) + `MNG`(관리)  
+> **기본 설명**: 승인 업무에서 고객의 충전 계좌 정보를 관리하는 테이블
+
 > **구분**: 신규 테이블  
 > **업무**: PE (선불충전)  
 > **용도**: 고객이 자동충전에 등록한 계좌 목록 관리
@@ -10,8 +13,8 @@
 |------|-----|--------|------|------|----------|------|
 | 1 | PK | MCUST_NO | 통합고객번호 | VARCHAR2(10) | N | |
 | 2 | PK | ACNT_SEQ | 계좌 순번 | NUMBER | N | |
-| 3 | | CUST_KEY | 고객KEY | VARCHAR2(128) | N | UUID, 유이신청 완료 |
-| 4 | | BILL_KEY | 계산KEY | VARCHAR2(128) | N | 유이신청 완료 |
+| 3 | | CUST_KEY | 고객KEY | VARCHAR2(128) | N | UUID, 용어신청 완료 |
+| 4 | | BILL_KEY | 계산KEY | VARCHAR2(128) | N | 용어신청 완료 |
 | 5 | | BANK_GBCD | 은행구분코드 | VARCHAR2(4) | N | 노스 은행코드 |
 | 6 | | BANK_ACNT_NM | 은행계좌이름 | VARCHAR2(20) | Y | |
 | 7 | | ACNT_NO | 계좌번호 | VARCHAR2(50) | Y | |
@@ -61,4 +64,22 @@ COMMENT ON COLUMN AP_CUST_CHRG_ACNT_MNG.REG_DTM      IS '등록일시';
 COMMENT ON COLUMN AP_CUST_CHRG_ACNT_MNG.CHGP_ID      IS '변경자ID';
 COMMENT ON COLUMN AP_CUST_CHRG_ACNT_MNG.CHGP_IP      IS '변경자IP';
 COMMENT ON COLUMN AP_CUST_CHRG_ACNT_MNG.CHG_DTM      IS '변경일시';
+
+-- ACNT_SEQ 채번용 시퀀스 (PEAAutoChargeMapper.xml의 insertChrgAcnt에서 NEXTVAL로 참조)
+CREATE SEQUENCE AP_CUST_CHRG_ACNT_MNG_SEQ
+    START WITH 1
+    INCREMENT BY 1
+    NOCACHE;
+```
+
+---
+
+## 조회 쿼리 예제
+
+```sql
+-- 전체 조회
+SELECT * FROM AP_CUST_CHRG_ACNT_MNG;
+
+-- 특정 회원의 등록 계좌 목록 (우선순위순)
+SELECT * FROM AP_CUST_CHRG_ACNT_MNG WHERE MCUST_NO = 'TEST0001' ORDER BY LVL_PRTY ASC;
 ```

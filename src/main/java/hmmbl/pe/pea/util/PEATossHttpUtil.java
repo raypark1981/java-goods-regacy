@@ -26,37 +26,38 @@ public class PEATossHttpUtil {
      * @return 파싱된 응답 JSONObject
      * @throws Exception HTTP 통신 또는 JSON 파싱 실패
      */
-    public static JSONObject postJson(String urlStr, String secretKey, JSONObject requestBody)
-            throws Exception {
-        URL url = new URL(urlStr);
-        HttpsURLConnection conn = (HttpsURLConnection) url.openConnection();
-
-        try {
-            System.setProperty("https.protocols", "TLSv1.2");
-            SSLContext sslContext = SSLContext.getInstance("TLSv1.2");
-            sslContext.init(null, null, null);
-            conn.setSSLSocketFactory(sslContext.getSocketFactory());
-        } catch (NoSuchAlgorithmException | KeyManagementException e) {
-            throw new RuntimeException("TLS1.2 설정 실패", e);
-        }
-
-        String auth = Base64.getEncoder().encodeToString((secretKey + ":").getBytes(StandardCharsets.UTF_8));
-        conn.setRequestProperty("Authorization", "Basic " + auth);
-        conn.setRequestProperty("Content-Type", "application/json");
-        conn.setRequestMethod("POST");
-        conn.setDoOutput(true);
-
-        try (OutputStream os = conn.getOutputStream()) {
-            os.write(requestBody.toJSONString().getBytes(StandardCharsets.UTF_8));
-        }
-
-        int statusCode = conn.getResponseCode();
-
-        try (InputStream is = statusCode == 200 ? conn.getInputStream() : conn.getErrorStream();
-                Reader reader = new InputStreamReader(is, StandardCharsets.UTF_8)) {
-            JSONObject responseBody = (JSONObject) new JSONParser().parse(reader);
-            responseBody.put("statusCode", statusCode);
-            return responseBody;
-        }
-    }
+    // PEAAutoChargeServiceImpl로 인라인 처리하여 미사용. 공통 util로 안 뽑기로 함.
+    // public static JSONObject postJson(String urlStr, String secretKey, JSONObject requestBody)
+    //         throws Exception {
+    //     URL url = new URL(urlStr);
+    //     HttpsURLConnection conn = (HttpsURLConnection) url.openConnection();
+    //
+    //     try {
+    //         System.setProperty("https.protocols", "TLSv1.2");
+    //         SSLContext sslContext = SSLContext.getInstance("TLSv1.2");
+    //         sslContext.init(null, null, null);
+    //         conn.setSSLSocketFactory(sslContext.getSocketFactory());
+    //     } catch (NoSuchAlgorithmException | KeyManagementException e) {
+    //         throw new RuntimeException("TLS1.2 설정 실패", e);
+    //     }
+    //
+    //     String auth = Base64.getEncoder().encodeToString((secretKey + ":").getBytes(StandardCharsets.UTF_8));
+    //     conn.setRequestProperty("Authorization", "Basic " + auth);
+    //     conn.setRequestProperty("Content-Type", "application/json");
+    //     conn.setRequestMethod("POST");
+    //     conn.setDoOutput(true);
+    //
+    //     try (OutputStream os = conn.getOutputStream()) {
+    //         os.write(requestBody.toJSONString().getBytes(StandardCharsets.UTF_8));
+    //     }
+    //
+    //     int statusCode = conn.getResponseCode();
+    //
+    //     try (InputStream is = statusCode == 200 ? conn.getInputStream() : conn.getErrorStream();
+    //             Reader reader = new InputStreamReader(is, StandardCharsets.UTF_8)) {
+    //         JSONObject responseBody = (JSONObject) new JSONParser().parse(reader);
+    //         responseBody.put("statusCode", statusCode);
+    //         return responseBody;
+    //     }
+    // }
 }

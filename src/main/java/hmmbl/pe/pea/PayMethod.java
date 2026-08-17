@@ -11,7 +11,8 @@ public enum PayMethod {
     TRANSFER("TRANSFER", "96", "107101", "transfer", PropertyGroup.SIMP),
     CARD("CARD", "01", "107001", "card", PropertyGroup.CARD),
     KAKAOPAY("KAKAOPAY", "10", "107002", "card", PropertyGroup.SIMP),
-    NAVERPAY("NAVERPAY", "11", "107003", "card", PropertyGroup.SIMP);
+    NAVERPAY("NAVERPAY", "11", "107003", "card", PropertyGroup.SIMP),
+    BILL("BILL", "82", "107004", "billing", PropertyGroup.BILLING);
 
     private final String code;
     private final String prepChrgStlmGbcd;
@@ -45,7 +46,8 @@ public enum PayMethod {
     @Getter
     public enum PropertyGroup {
         CARD("toss.pg.card"),
-        SIMP("toss.pg.simp");
+        SIMP("toss.pg.simp"),
+        BILLING("toss.pg.billing");
 
         private final String prefix;
 
