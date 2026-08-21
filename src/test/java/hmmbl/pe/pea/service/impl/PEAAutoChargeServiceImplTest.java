@@ -9,6 +9,9 @@ public class PEAAutoChargeServiceImplTest {
 
     // 토스 개발자센터 > API 키에서 확인한 테스트 시크릿 키
     private static final String TEST_SECRET_KEY = "test_sk_eqRGgYO1r5jywQJZqn518QnN2Eya";
+//    private static final String TEST_SECRET_KEY = "test_sk_ex6BJGQOVDJgX2B0gmA58W4w2zNb";
+
+
 
     // 계좌 빌링키 발급 엔드포인트
     private static final String BILLING_ISSUE_URL =

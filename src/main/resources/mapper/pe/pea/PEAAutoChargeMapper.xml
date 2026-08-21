@@ -4,7 +4,7 @@
 
 <mapper namespace="hmmbl.pe.pea.service.dao.PEAAutoChargeDAO">
 
-    <insert id="insertChrgAcnt" parameterType="hmmbl.pe.pea.vo.PEAAutoChargeVO">
+    <insert id="insertChrgAcnt" parameterType="java.util.Map">
         /* PEAAutoChargeDAO.insertChrgAcnt */
         INSERT INTO AP_CUST_CHRG_ACNT_MNG (
             MCUST_NO
@@ -22,7 +22,7 @@
           , CHG_DTM
         ) VALUES (
             #{mcustNo}
-          , AP_CUST_CHRG_ACNT_MNG_SEQ.NEXTVAL
+          , #{acntSeq}
           , #{custKey}
           , #{billKey}
           , #{bankGbcd}
@@ -54,7 +54,7 @@
       , CHG_DTM    AS chgDtm
     </sql>
 
-    <select id="selectChrgAcntList" parameterType="hmmbl.pe.pea.vo.PEAAutoChargeReqVO" resultType="hmmbl.pe.pea.vo.PEAAutoChargeVO">
+    <select id="selectChrgAcntList" parameterType="hmmbl.pe.pea.vo.PEAAutoChargeVO" resultType="hmmbl.pe.pea.vo.PEAAutoChargeVO">
         /* PEAAutoChargeDAO.selectChrgAcntList */
         SELECT
             <include refid="chrgAcntColumns"/>
@@ -90,6 +90,13 @@
         FETCH FIRST 1 ROWS ONLY
     </select>
 
+    <select id="selectMaxAcntSeq" parameterType="String" resultType="java.util.Map">
+        /* PEAAutoChargeDAO.selectMaxAcntSeq */
+        SELECT MAX(ACNT_SEQ) AS ACNT_SEQ
+        FROM AP_CUST_CHRG_ACNT_MNG
+        WHERE MCUST_NO = #{mcustNo}
+    </select>
+
     <insert id="insertAutoChrgReqDtl" parameterType="hmmbl.pe.pea.vo.PEAAutoChrgReqDtlVO">
         /* PEAAutoChargeDAO.insertAutoChrgReqDtl */
         INSERT INTO AP_CUST_AUTO_CHRG_REQ_DTL (
@@ -123,12 +130,12 @@
             LOG_ID
           , EXEC_DTM
           , MCUST_NO
-          , PAYMENT_KEY
-          , ORDER_ID
+          , ORD_ID
+          , PAY_KEY
           , CHRG_TYPE_GBCD
           , RSV_CHRG_MTHD_GBCD
           , RSV_CHRG_PRD_GBCD
-          , RSV_CHRG_DT_GBCD
+          , RSV_CHRG_DLU_GBCD
           , RSV_BSIC_AMT_GBCD
           , ACNT_CHRG_AMT
           , REAL_CHRG_AMT
@@ -138,12 +145,13 @@
           , PROC_RST_GBCD
           , ERR_CD
           , ERR_MSG_CNTN
+          , BANK_ACNT_NM
         ) VALUES (
-            TO_CHAR(AP_CUST_PNT_AUTO_CHRG_HIS_SEQ.NEXTVAL)
+            (SELECT NVL(MAX(LOG_ID), 0) + 1 FROM AP_CUST_PNT_AUTO_CHRG_HIS)
           , TO_CHAR(SYSDATE, 'YYYYMMDDHH24MISS')
           , #{mcustNo}
-          , #{paymentKey}
-          , #{orderId}
+          , #{orderId, jdbcType=VARCHAR}
+          , #{paymentKey, jdbcType=VARCHAR}
           , #{chrgTypeGbcd}
           , #{rsvChrgMthdGbcd}
           , #{rsvChrgPrdGbcd}
@@ -157,6 +165,7 @@
           , #{procRstGbcd}
           , #{errCd}
           , #{errMsgCntn}
+          , #{bankAcntNm, jdbcType=VARCHAR}
         )
     </insert>
 
@@ -345,18 +354,19 @@
         /* PEAAutoChargeDAO.selectPntAutoChrgHisByPaymentKey */
         SELECT
             MCUST_NO      AS mcustNo
-          , PAYMENT_KEY   AS paymentKey
-          , ORDER_ID      AS orderId
+          , PAY_KEY       AS paymentKey
+          , ORD_ID        AS orderId
           , ACNT_CHRG_AMT AS acntChrgAmt
           , REAL_CHRG_AMT AS realChrgAmt
           , ACNT_SEQ      AS acntSeq
           , BANK_GBCD     AS bankGbcd
           , ACNT_NO       AS acntNo
+          , BANK_ACNT_NM  AS bankAcntNm
         FROM
             AP_CUST_PNT_AUTO_CHRG_HIS
         WHERE
             MCUST_NO = #{mcustNo}
-            AND PAYMENT_KEY = #{paymentKey}
+            AND PAY_KEY = #{paymentKey}
         ORDER BY
             EXEC_DTM DESC
         FETCH FIRST 1 ROWS ONLY

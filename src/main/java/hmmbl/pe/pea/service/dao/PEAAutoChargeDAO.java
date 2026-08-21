@@ -1,6 +1,5 @@
 package hmmbl.pe.pea.service.dao;
 
-import hmmbl.pe.pea.vo.PEAAutoChargeReqVO;
 import hmmbl.pe.pea.vo.PEAAutoChargeVO;
 import hmmbl.pe.pea.vo.PEAAutoChrgReqDtlVO;
 import hmmbl.pe.pea.vo.PEAPntAutoChrgHisVO;
@@ -11,15 +10,16 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
+import java.util.Map;
 
 @Mapper
 public interface PEAAutoChargeDAO {
 
     /** 충전 계좌(빌링키) 등록. */
-    void insertChrgAcnt(PEAAutoChargeVO acntVO);
+    void insertChrgAcnt(Map<String, Object> acntMap);
 
     /** 고객별 등록 계좌 목록 조회. */
-    List<PEAAutoChargeVO> selectChrgAcntList(PEAAutoChargeReqVO reqVO);
+    List<PEAAutoChargeVO> selectChrgAcntList(PEAAutoChargeVO acntVO);
 
     /** 우선순위 기준 상위 빌링키 단건 조회. */
     PEAAutoChargeVO selectBillingKey(String mcustNo);
@@ -44,4 +44,7 @@ public interface PEAAutoChargeDAO {
 
     /** mcustNo + paymentKey로 원본 충전 이력 조회. 취소 요청 시 소유권 확인 및 원본 정보(orderId, 충전금액) 재사용에 사용. */
     PEAPntAutoChrgHisVO selectPntAutoChrgHisByPaymentKey(@Param("mcustNo") String mcustNo, @Param("paymentKey") String paymentKey);
+
+    /** 고객별 등록된 충전계좌 중 최대 ACNT_SEQ 조회. 결과 맵의 "ACNT_SEQ" 키 값이 없으면(등록된 계좌 없음) null. */
+    Map<String, Object> selectMaxAcntSeq(String mcustNo);
 }

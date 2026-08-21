@@ -65,12 +65,9 @@ COMMENT ON COLUMN AP_CUST_CHRG_ACNT_MNG.CHGP_ID      IS '변경자ID';
 COMMENT ON COLUMN AP_CUST_CHRG_ACNT_MNG.CHGP_IP      IS '변경자IP';
 COMMENT ON COLUMN AP_CUST_CHRG_ACNT_MNG.CHG_DTM      IS '변경일시';
 
--- ACNT_SEQ 채번용 시퀀스 (PEAAutoChargeMapper.xml의 insertChrgAcnt에서 NEXTVAL로 참조)
-CREATE SEQUENCE AP_CUST_CHRG_ACNT_MNG_SEQ
-    START WITH 1
-    INCREMENT BY 1
-    NOCACHE;
 ```
+
+> **2026-08-18 변경**: `ACNT_SEQ`는 전역 시퀀스가 아니라 **고객(MCUST_NO)별로 1부터 증가**하는 값으로 변경. `insertChrgAcnt` 호출 전 `selectMaxAcntSeq(mcustNo)`로 해당 고객의 현재 최대값을 조회해서 +1한 값을 넣는다 (없으면 1). 이에 따라 `AP_CUST_CHRG_ACNT_MNG_SEQ` 시퀀스는 더 이상 사용하지 않는다.
 
 ---
 

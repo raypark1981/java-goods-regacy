@@ -9,75 +9,59 @@
 
 ## 컬럼 정의
 
+> **2026-08-18 갱신**: 실제 DB(DB 클라이언트 조회 캡처, 컬럼명은 직접 확인 완료) 기준으로 재정리. 실제 테이블은 `LOG_ID`/`EXEC_DTM`/`MCUST_NO`를 제외한 전 컬럼이 `Nullable=Y`로 배포되어 있음(이전 설계안의 NOT NULL 다수와 다름).
+
 | 순번 | Key | 컬럼명 | 설명 | Type | Nullable | 비고 |
 |------|-----|--------|------|------|----------|------|
-| 1 | PK | LOG_ID | 로그ID | VARCHAR2(10) | N | |
-| 2 | | EXEC_DTM | 실행일시 | VARCHAR2(14) | N | yyyyMMddHHmmss |
-| 3 | | MCUST_NO | 고객번호 | VARCHAR2(10) | N | |
-| 4 | | PAYMENT_KEY | 결제키 | VARCHAR2(200) | N | 토스 paymentKey. 결제 취소/조회 시 사용 |
-| 5 | | ORDER_ID | 주문ID | VARCHAR2(64) | N | 토스 orderId. 주문 매칭 키 |
-| 6 | | CHRG_TYPE_GBCD | 충전유형구분코드 | VARCHAR2(2) | N | 용어신청 완료. 자동(01)/예약(02) |
-| 7 | | RSV_CHRG_MTHD_GBCD | 예약충전방법구분코드 | VARCHAR2(2) | N | 금액부족/지정일 |
-| 8 | | RSV_CHRG_PRD_GBCD | 예약충전주기구분코드 | VARCHAR2(2) | N | 매월/매주 |
-| 9 | | RSV_CHRG_DT_GBCD | 예약충전일구분코드 | VARCHAR2(2) | Y | 월~금, 1~일 |
-| 10 | | RSV_BSIC_AMT_GBCD | 예약기준금액구분코드 | VARCHAR2(2) | Y | 만원~30만원 |
-| 11 | | ACNT_CHRG_AMT | 계좌충전금액 | NUMBER | N | |
-| 12 | | REAL_CHRG_AMT | 실충전금액 | NUMBER | N | 용어신청 완료 |
-| 13 | | ACNT_SEQ | 계좌순번 | NUMBER | N | 고객별 충전계좌 삭제 시 필요 |
-| 14 | | BANK_GBCD | 은행구분코드 | VARCHAR2(4) | N | 고객별 충전계좌 삭제 시 필요 |
-| 15 | | ACNT_NO | 계좌번호 | VARCHAR2(50) | N | 고객별 충전계좌 삭제 시 필요 |
-| 16 | | PROC_RST_GBCD | 처리결과구분코드 | VARCHAR2(2) | N | 성공/실패 |
-| 17 | | ERR_CD | 오류코드 | VARCHAR2(10) | N | |
-| 18 | | ERR_MSG_CNTN | 오류메시지내용 | VARCHAR2(300) | N | |
-
-> 첨부 이미지의 순번이 3번 다음 6번으로 이어져 4~5번 컬럼은 이미지에서 확인되지 않았다. 토스 결제 취소/조회에 필요한 PAYMENT_KEY, ORDER_ID를 해당 순번에 추가했다.
+| 1 | PK | LOG_ID | 로그ID | NUMBER | N | |
+| 2 | | EXEC_DTM | 실행일시 | VARCHAR2(14 BYTE) | N | yyyyMMddHHmmss |
+| 3 | | MCUST_NO | 통합회원번호 | VARCHAR2(10 BYTE) | N | |
+| 4 | | ORD_ID | 주문ID | VARCHAR2(50 BYTE) | Y | 확인 완료 |
+| 5 | | PAY_KEY | 결제KEY | VARCHAR2(128 BYTE) | Y | 토스 paymentKey. 기존 문서엔 `PAYMENT_KEY`로 잘못 기재돼 있었음 |
+| 6 | | CHRG_TYPE_GBCD | 충전유형구분코드 | VARCHAR2(2 BYTE) | Y | 자동(01)/예약(02) |
+| 7 | | RSV_CHRG_MTHD_GBCD | 예약충전방법구분코드 | VARCHAR2(2 BYTE) | Y | 금액부족/지정일 |
+| 8 | | RSV_CHRG_PRD_GBCD | 예약충전주기구분코드 | VARCHAR2(2 BYTE) | Y | 매월/매주 |
+| 9 | | RSV_CHRG_DLU_GBCD | 예약충전일구분코드 | VARCHAR2(2 BYTE) | Y | 확인 완료. 기존 문서엔 `RSV_CHRG_DT_GBCD`로 잘못 기재돼 있었음 |
+| 10 | | RSV_BSIC_AMT_GBCD | 예약기준금액구분코드 | VARCHAR2(2 BYTE) | Y | |
+| 11 | | ACNT_CHRG_AMT | 계좌충전금액 | NUMBER | Y | |
+| 12 | | REAL_CHRG_AMT | 실충전금액 | NUMBER | Y | |
+| 13 | | ACNT_SEQ | 계좌순번 | NUMBER | Y | |
+| 14 | | BANK_GBCD | 은행구분코드 | VARCHAR2(4 BYTE) | Y | |
+| 15 | | ACNT_NO | 계좌번호 | VARCHAR2(50 BYTE) | Y | |
+| 16 | | PROC_RST_GBCD | 처리결과구분코드 | VARCHAR2(2 BYTE) | Y | 성공(01)/실패(02) |
+| 17 | | ERR_CD | 오류코드 | VARCHAR2(10 BYTE) | Y | |
+| 18 | | ERR_MSG_CNTN | 오류메시지내용 | VARCHAR2(300 BYTE) | Y | |
+| 19 | | BANK_ACNT_NM | 은행계좌이름 | VARCHAR2(20 BYTE) | Y | `insertAutoChrgHis` 코드에 반영 완료 |
 
 ---
 
-## CREATE TABLE
+## CREATE TABLE (실제 배포된 테이블 기준, 2026-08-18 갱신)
+
+> 아래는 실제 DB 컬럼 그대로 재구성한 것 (컬럼명 확인 완료).
 
 ```sql
 CREATE TABLE AP_CUST_PNT_AUTO_CHRG_HIS (
-    LOG_ID              VARCHAR2(10)  NOT NULL,  -- 로그ID
-    EXEC_DTM            VARCHAR2(14)  NOT NULL,  -- 실행일시 (yyyyMMddHHmmss)
-    MCUST_NO            VARCHAR2(10)  NOT NULL,  -- 고객번호
-    PAYMENT_KEY         VARCHAR2(200) NOT NULL,  -- 결제키 (토스 paymentKey)
-    ORDER_ID            VARCHAR2(64)  NOT NULL,  -- 주문ID (토스 orderId)
-    CHRG_TYPE_GBCD      VARCHAR2(2)   NOT NULL,  -- 충전유형구분코드
-    RSV_CHRG_MTHD_GBCD  VARCHAR2(2)   NOT NULL,  -- 예약충전방법구분코드
-    RSV_CHRG_PRD_GBCD   VARCHAR2(2)   NOT NULL,  -- 예약충전주기구분코드
-    RSV_CHRG_DT_GBCD    VARCHAR2(2)   NULL,      -- 예약충전일구분코드
-    RSV_BSIC_AMT_GBCD   VARCHAR2(2)   NULL,      -- 예약기준금액구분코드
-    ACNT_CHRG_AMT       NUMBER        NOT NULL,  -- 계좌충전금액
-    REAL_CHRG_AMT       NUMBER        NOT NULL,  -- 실충전금액
-    ACNT_SEQ            NUMBER        NOT NULL,  -- 계좌순번
-    BANK_GBCD           VARCHAR2(4)   NOT NULL,  -- 은행구분코드
-    ACNT_NO             VARCHAR2(50)  NOT NULL,  -- 계좌번호
-    PROC_RST_GBCD       VARCHAR2(2)   NOT NULL,  -- 처리결과구분코드
-    ERR_CD              VARCHAR2(10)  NOT NULL,  -- 오류코드
-    ERR_MSG_CNTN        VARCHAR2(300) NOT NULL,  -- 오류메시지내용
+    LOG_ID              NUMBER         NOT NULL,  -- 로그ID
+    EXEC_DTM            VARCHAR2(14)   NOT NULL,  -- 실행일시 (yyyyMMddHHmmss)
+    MCUST_NO            VARCHAR2(10)   NOT NULL,  -- 통합회원번호
+    ORD_ID              VARCHAR2(50)   NULL,      -- 주문ID
+    PAY_KEY             VARCHAR2(128)  NULL,      -- 결제KEY (토스 paymentKey)
+    CHRG_TYPE_GBCD      VARCHAR2(2)    NULL,      -- 충전유형구분코드
+    RSV_CHRG_MTHD_GBCD  VARCHAR2(2)    NULL,      -- 예약충전방법구분코드
+    RSV_CHRG_PRD_GBCD   VARCHAR2(2)    NULL,      -- 예약충전주기구분코드
+    RSV_CHRG_DLU_GBCD   VARCHAR2(2)    NULL,      -- 예약충전일구분코드
+    RSV_BSIC_AMT_GBCD   VARCHAR2(2)    NULL,      -- 예약기준금액구분코드
+    ACNT_CHRG_AMT       NUMBER         NULL,      -- 계좌충전금액
+    REAL_CHRG_AMT       NUMBER         NULL,      -- 실충전금액
+    ACNT_SEQ            NUMBER         NULL,      -- 계좌순번
+    BANK_GBCD           VARCHAR2(4)    NULL,      -- 은행구분코드
+    ACNT_NO             VARCHAR2(50)   NULL,      -- 계좌번호
+    PROC_RST_GBCD       VARCHAR2(2)    NULL,      -- 처리결과구분코드
+    ERR_CD              VARCHAR2(10)   NULL,      -- 오류코드
+    ERR_MSG_CNTN        VARCHAR2(300)  NULL,      -- 오류메시지내용
+    BANK_ACNT_NM        VARCHAR2(20)   NULL,      -- 은행계좌이름
     CONSTRAINT PK_AP_CUST_PNT_AUTO_CHRG_HIS PRIMARY KEY (LOG_ID)
 );
-
-COMMENT ON TABLE  AP_CUST_PNT_AUTO_CHRG_HIS                    IS '고객포인트자동충전이력';
-COMMENT ON COLUMN AP_CUST_PNT_AUTO_CHRG_HIS.LOG_ID              IS '로그ID';
-COMMENT ON COLUMN AP_CUST_PNT_AUTO_CHRG_HIS.EXEC_DTM            IS '실행일시';
-COMMENT ON COLUMN AP_CUST_PNT_AUTO_CHRG_HIS.MCUST_NO            IS '고객번호';
-COMMENT ON COLUMN AP_CUST_PNT_AUTO_CHRG_HIS.PAYMENT_KEY         IS '결제키';
-COMMENT ON COLUMN AP_CUST_PNT_AUTO_CHRG_HIS.ORDER_ID            IS '주문ID';
-COMMENT ON COLUMN AP_CUST_PNT_AUTO_CHRG_HIS.CHRG_TYPE_GBCD      IS '충전유형구분코드';
-COMMENT ON COLUMN AP_CUST_PNT_AUTO_CHRG_HIS.RSV_CHRG_MTHD_GBCD  IS '예약충전방법구분코드';
-COMMENT ON COLUMN AP_CUST_PNT_AUTO_CHRG_HIS.RSV_CHRG_PRD_GBCD   IS '예약충전주기구분코드';
-COMMENT ON COLUMN AP_CUST_PNT_AUTO_CHRG_HIS.RSV_CHRG_DT_GBCD    IS '예약충전일구분코드';
-COMMENT ON COLUMN AP_CUST_PNT_AUTO_CHRG_HIS.RSV_BSIC_AMT_GBCD   IS '예약기준금액구분코드';
-COMMENT ON COLUMN AP_CUST_PNT_AUTO_CHRG_HIS.ACNT_CHRG_AMT       IS '계좌충전금액';
-COMMENT ON COLUMN AP_CUST_PNT_AUTO_CHRG_HIS.REAL_CHRG_AMT       IS '실충전금액';
-COMMENT ON COLUMN AP_CUST_PNT_AUTO_CHRG_HIS.ACNT_SEQ            IS '계좌순번';
-COMMENT ON COLUMN AP_CUST_PNT_AUTO_CHRG_HIS.BANK_GBCD           IS '은행구분코드';
-COMMENT ON COLUMN AP_CUST_PNT_AUTO_CHRG_HIS.ACNT_NO             IS '계좌번호';
-COMMENT ON COLUMN AP_CUST_PNT_AUTO_CHRG_HIS.PROC_RST_GBCD       IS '처리결과구분코드';
-COMMENT ON COLUMN AP_CUST_PNT_AUTO_CHRG_HIS.ERR_CD              IS '오류코드';
-COMMENT ON COLUMN AP_CUST_PNT_AUTO_CHRG_HIS.ERR_MSG_CNTN        IS '오류메시지내용';
 
 -- LOG_ID 채번용 시퀀스
 CREATE SEQUENCE AP_CUST_PNT_AUTO_CHRG_HIS_SEQ
@@ -85,6 +69,8 @@ CREATE SEQUENCE AP_CUST_PNT_AUTO_CHRG_HIS_SEQ
     INCREMENT BY 1
     NOCACHE;
 ```
+
+> **2026-08-18 변경**: `LOG_ID` 채번을 시퀀스가 아니라 **`INSERT` 문 안의 서브쿼리로 `MAX(LOG_ID)+1`을 계산**하는 방식으로 변경 (`(SELECT NVL(MAX(LOG_ID), 0) + 1 FROM AP_CUST_PNT_AUTO_CHRG_HIS)`). Java에서 별도 SELECT 후 INSERT하는 방식(왕복 갭 존재)이 아니라 INSERT 시점에 DB가 한 번에 계산하도록 해서 동시성 위험을 줄였다. 단, 시퀀스처럼 완전히 동시성 안전하진 않음(같은 순간 커밋 전 상태를 동시에 읽으면 여전히 PK 충돌 가능). 이에 따라 `AP_CUST_PNT_AUTO_CHRG_HIS_SEQ` 시퀀스는 더 이상 사용하지 않는다.
 
 ---
 

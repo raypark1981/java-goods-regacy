@@ -26,6 +26,7 @@ public class PEAPntAutoChrgHisVO extends BaseVo {
     private Integer acntSeq;           // 계좌순번
     private String bankGbcd;           // 은행구분코드
     private String acntNo;             // 계좌번호
+    private String bankAcntNm;         // 은행계좌이름
     private String procRstGbcd;        // 처리결과구분코드
     private String errCd;              // 오류코드
     private String errMsgCntn;         // 오류메시지내용

@@ -1,7 +1,7 @@
 package hmmbl.pe.pea.web;
 
 import hmmbl.pe.pea.service.PEAAutoChargeService;
-import hmmbl.pe.pea.vo.PEAAutoChargeReqVO;
+import hmmbl.pe.pea.vo.PEAAutoChargeReq;
 import hmmbl.pe.pea.vo.PEAAutoChargeResVO;
 import hmfrnt.web.ResultData;
 import hmfrnt.web.BaseController;
@@ -39,7 +39,7 @@ public class PEAAutoChargeController extends BaseController {
     @Operation(summary = "빌링키 발급", description = "토스 계좌 인증 완료 후 billingKey를 발급받아 저장한다.")
     @RequestMapping(value = "/billingAuthIssue.nhd", method = RequestMethod.POST)
     @ResponseBody
-    public ResultData<PEAAutoChargeResVO> issueBillingKey(@RequestBody PEAAutoChargeReqVO reqVO, HttpServletRequest request) throws Exception {
+    public ResultData<PEAAutoChargeResVO> issueBillingKey(@RequestBody PEAAutoChargeReq.BillingAuthIssue reqVO, HttpServletRequest request) throws Exception {
         return ResultData.success(peaAutoChargeService.issueBillingKey(reqVO, request));
     }
 
@@ -47,7 +47,7 @@ public class PEAAutoChargeController extends BaseController {
     @Operation(summary = "자동충전 결제", description = "등록된 빌링키로 토스 자동충전 결제를 요청한다.")
     @RequestMapping(value = "/autoCharge.nhd", method = RequestMethod.POST)
     @ResponseBody
-    public ResultData<PEAAutoChargeResVO> requestAutoCharge(@RequestBody PEAAutoChargeReqVO reqVO) {
+    public ResultData<PEAAutoChargeResVO> requestAutoCharge(@RequestBody PEAAutoChargeReq.Charge reqVO) {
         try {
             return ResultData.success(peaAutoChargeService.requestAutoCharge(reqVO));
         } catch (Exception e) {
@@ -60,7 +60,7 @@ public class PEAAutoChargeController extends BaseController {
     @Operation(summary = "자동충전 결제 취소", description = "포인트 충전 실패 등 보상 처리 시 토스 결제 취소를 요청한다.")
     @RequestMapping(value = "/autoChargeCancel.nhd", method = RequestMethod.POST)
     @ResponseBody
-    public ResultData<PEAAutoChargeResVO> cancelAutoCharge(@RequestBody PEAAutoChargeReqVO reqVO) {
+    public ResultData<PEAAutoChargeResVO> cancelAutoCharge(@RequestBody PEAAutoChargeReq.Cancel reqVO) {
         try {
             PEAAutoChargeResVO resVO = peaAutoChargeService.cancelAutoCharge(reqVO);
             return ResultData.success(resVO);
@@ -93,10 +93,12 @@ public class PEAAutoChargeController extends BaseController {
         // TODO 나중에 세션정보(로그인 회원번호)에서 받아야 함. 현재는 테스트용 고정값.
         String mcustNo = "TEST0001";
 
-        PEAAutoChargeReqVO reqVO = new PEAAutoChargeReqVO();
+        PEAAutoChargeReq.BillingAuthIssue reqVO = new PEAAutoChargeReq.BillingAuthIssue();
         reqVO.setAuthKey(authKey);
         reqVO.setCustomerKey(customerKey);
         reqVO.setMcustNo(mcustNo);
+        // billingAuth.jsp가 토스 SDK를 method: "TRANSFER"로 고정 호출하고 있어 동일하게 맞춤.
+        reqVO.setPayMethod("TRANSFER");
 
         try {
             PEAAutoChargeResVO resVO = peaAutoChargeService.issueBillingKey(reqVO, request);
